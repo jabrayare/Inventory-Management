@@ -21,4 +21,4 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
       - name: build with Gradle
-        run: ./gradlew build --no-daemon
+        run: ./gradlew clean build --no-daemon
