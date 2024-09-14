@@ -5,9 +5,9 @@ name: CI Gradle Build
 # Event -> When this happens, we can trigger a certain workflow.
 on:
   push:
-    branches: ['main']
+    branches: [main]
   pull_request:
-    branches: ['main']
+    branches: [main]
 
 jobs:
   build:
