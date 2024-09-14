@@ -34,8 +34,6 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
-      - name: Run Tests
-        run: ./gradlew test -x contextLoads
 
       - name: build with Gradle
         run: ./gradlew clean build --no-daemon
