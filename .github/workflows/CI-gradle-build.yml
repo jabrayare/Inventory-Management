@@ -37,3 +37,6 @@ jobs:
 
       - name: build with Gradle
         run: ./gradlew clean build --no-daemon
+#
+#  - name: Run Tests, excluding contextLoads
+#    run: ./gradlew test -x testClasses --exclude-task :contextLoads
