@@ -33,7 +33,7 @@ jobs:
       # Build and tag Docker image
       - name: Build Docker image
         run: |
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/microservices:latest 
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/microservices:latest .
 
       # Push both tags to Docker Hub
       - name: Push Docker image
