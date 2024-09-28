@@ -5,7 +5,7 @@ FROM openjdk:17-jdk-slim
 WORKDIR /app
 
 # Copy the build files
-COPY build/libs/Inventory-management-system-0.0.1-SNAPSHOT.jar app.jar
+COPY build/libs/Inventory-management-system.jar app.jar
 
 # Expose the port your app runs on
 EXPOSE 8080
