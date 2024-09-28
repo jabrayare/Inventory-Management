@@ -1,9 +1,6 @@
 # Use a base image
 FROM openjdk:17-jdk-alpine
 
-export DOCKER_BUILDKIT=0
-export COMPOSE_DOCKER_CLI_BUILD=0
-
 # Set the working directory
 WORKDIR /app
 
