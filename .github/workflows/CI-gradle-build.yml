@@ -55,7 +55,7 @@ jobs:
         with:
           context: .
           push: true
-          tags: jibrilyare/microservices:version-1
+          tags: ${{ secrets.DOCKERHUB_USERNAME }}/microservices
 #
 #  - name: Run Tests, excluding contextLoads
 #    run: ./gradlew test -x testClasses --exclude-task :contextLoads
