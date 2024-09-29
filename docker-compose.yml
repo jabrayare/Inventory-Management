@@ -1,14 +1,5 @@
 version: '3.7'
 services:
-  app:
-    build: .
-    ports:
-      - "8080:8080"
-    depends_on:
-      - db
-      - rabbitmq
-      - kafka
-
   db:
     image: mysql:8
     environment:
@@ -18,18 +9,29 @@ services:
       MYSQL_ROOT_PASSWORD: root
     ports:
       - "3306:3306"
+    networks:
+      - my-network
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
 
   rabbitmq:
     image: rabbitmq:3-management
     ports:
       - "5672:5672"
       - "15672:15672" # For RabbitMQ management UI
+    networks:
+      - my-network
 
   zookeeper:
     image: wurstmeister/zookeeper
     ports:
       - "2181:2181"
-
+    networks:
+      - my-network
   kafka:
     image: wurstmeister/kafka
     ports:
@@ -38,18 +40,38 @@ services:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092  # Use service name instead of localhost
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
     depends_on:
       - zookeeper
+    networks:
+      - my-network
 
-
-  kafdrop:
-    image: obsidiandynamics/kafdrop
+  spring-boot-app:
+    image: jibrilyare/microservices:latest
     ports:
-      - "9000:9000"
-    environment:
-      KAFKA_BROKERCONNECT: "localhost:9092"
-      JVM_OPTS: "-Xms32M -Xmx64M"
+      - "8080:8080"
     depends_on:
+      - db
+      - rabbitmq
       - kafka
+    networks:
+      - my-network
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/inventory-management
+      SPRING_DATASOURCE_USERNAME: jabra
+      SPRING_DATASOURCE_PASSWORD: jabra
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_PORT: 5672
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8080/actuator/health" ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+
+
+networks:
+  my-network:
+    driver: bridge
